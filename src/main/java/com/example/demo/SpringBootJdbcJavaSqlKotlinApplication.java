@@ -1,28 +1,23 @@
 package com.example.demo;
 
+import com.clevergang.jdbc.FluentNamedParameterJdbcTemplate;
 import com.example.demo.model.Beer;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Component;
 
-import java.text.MessageFormat;
-import java.util.HashMap;
+import javax.sql.DataSource;
 import java.util.List;
-import java.util.Map;
 
 @SpringBootApplication
 public class SpringBootJdbcJavaSqlKotlinApplication {
 
 	@Autowired
-	private JdbcTemplate jdbcTemplate;
-
-	@Autowired
-	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+	private FluentNamedParameterJdbcTemplate jdbcTemplate;
 
 	public static void main(String[] args) {
 		SpringApplication.run(SpringBootJdbcJavaSqlKotlinApplication.class, args);
@@ -33,31 +28,38 @@ public class SpringBootJdbcJavaSqlKotlinApplication {
 
 		Init() {
 			//Create the database table:
-			jdbcTemplate.execute("DROP TABLE IF EXISTS beers");
-			jdbcTemplate.execute(KotlinSql.Companion.getCreate());
+			jdbcTemplate.update("DROP TABLE IF EXISTS beers").execute();
+			jdbcTemplate.update(KotlinSql.Companion.getCreate()).execute();
 
 
 			//Insert many record:
-			Map<String, Object> parameters = new HashMap<>();
 			for (int i = 0; i < 10; i++) {
-				parameters.put("name","name " + i);
-				parameters.put("no", i);
-				namedParameterJdbcTemplate.update(KotlinSql.Companion.getInsert(), parameters);
+				jdbcTemplate.update(KotlinSql.Companion.getInsert())
+					.bind("name","name " + i)
+					.bind("no", i)
+					.execute();
 			}
 
 
 			//Read records:
-			List<Beer> beers = namedParameterJdbcTemplate.query(KotlinSql.Companion.select(),
-				new MapSqlParameterSource()
-					.addValue("no", 10),
-				(resultSet, rowNum) -> new Beer(
-					resultSet.getString("name"),
-					resultSet.getInt("no")
-				));
+			List<Beer> beers = jdbcTemplate.query(KotlinSql.Companion.select())
+					.bind("no", 10)
+					.fetch(Beer.class);
 
 
 			//Print read records:
 			beers.forEach(System.out::println);
 		}
+	}
+
+	@Bean
+	@Primary
+	public NamedParameterJdbcTemplate getJdbcTemplate(DataSource dataSource) {
+		return new NamedParameterJdbcTemplate(dataSource);
+	}
+
+	@Bean
+	public FluentNamedParameterJdbcTemplate getFluentJdbcTemplate(NamedParameterJdbcTemplate existingJdbcTemplate) {
+		return new FluentNamedParameterJdbcTemplate(existingJdbcTemplate.getJdbcOperations());
 	}
 }
