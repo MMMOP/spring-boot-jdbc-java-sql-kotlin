@@ -2,7 +2,6 @@ package com.example.demo;
 
 import com.example.demo.model.Beer;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -10,7 +9,6 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Component;
 
-import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -50,10 +48,11 @@ public class SpringBootJdbcJavaSqlKotlinApplication {
 			List<Beer> beers = namedParameterJdbcTemplate.query(KotlinSql.Companion.select(),
 				new MapSqlParameterSource()
 					.addValue("no", 10),
-				(resultSet, rowNum) -> new Beer(
-					resultSet.getString("name"),
-					resultSet.getInt("no")
-				));
+				(resultSet, rowNum) -> Beer.builder()
+					.name(resultSet.getString("name"))
+					.no(resultSet.getInt("no"))
+					.build()
+				);
 
 
 			//Print read records:
