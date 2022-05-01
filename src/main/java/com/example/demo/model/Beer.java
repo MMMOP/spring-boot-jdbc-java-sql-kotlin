@@ -1,12 +1,13 @@
 package com.example.demo.model;
 
-import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
-@Builder
+
+@NoArgsConstructor
 @Data
 @ToString
-public class Beer{
-	private String name;
-	private Integer no;
+public class Beer {
+    private String name;
+    private Integer no;
 }
