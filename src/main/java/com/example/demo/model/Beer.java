@@ -1,8 +1,10 @@
 package com.example.demo.model;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.ToString;
 
-@NoArgsConstructor
+@AllArgsConstructor
 @Data
 @ToString
 public class Beer{
