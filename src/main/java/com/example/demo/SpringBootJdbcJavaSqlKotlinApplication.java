@@ -7,6 +7,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Component;
 
@@ -18,6 +22,9 @@ public class SpringBootJdbcJavaSqlKotlinApplication {
 
 	@Autowired
 	private FluentNamedParameterJdbcTemplate jdbcTemplate;
+
+	@Autowired
+	private BeerService service;
 
 	public static void main(String[] args) {
 		SpringApplication.run(SpringBootJdbcJavaSqlKotlinApplication.class, args);
@@ -49,6 +56,18 @@ public class SpringBootJdbcJavaSqlKotlinApplication {
 
 			//Print read records:
 			beers.forEach(System.out::println);
+
+
+			//paging data
+			System.out.println("\n #### paging #### \n");
+
+			Pageable pageable = PageRequest.of(1, 5,
+													Sort.by("name").ascending().and(
+													Sort.by("no").descending())
+												);
+			Page<Beer> beerByPage = service.findBeerByPage(pageable);
+
+			beerByPage.forEach(System.out::println);
 		}
 	}
 
