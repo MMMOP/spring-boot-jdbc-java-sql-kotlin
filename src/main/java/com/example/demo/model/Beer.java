@@ -10,4 +10,6 @@ import lombok.ToString;
 public class Beer {
     private String name;
     private Integer no;
+    private String snakeCase;
+    private String camelCase;
 }
