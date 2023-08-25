@@ -3,6 +3,7 @@ package com.example.demo;
 import com.clevergang.jdbc.FluentNamedParameterJdbcTemplate;
 import com.example.demo.model.Beer;
 import com.zaxxer.hikari.HikariDataSource;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -34,6 +35,7 @@ class Config {
 	}
 }
 
+@Slf4j
 @Component
 class Init {
 
@@ -50,9 +52,11 @@ class Init {
 		//Insert many record:
 		for (int i = 0; i < 10; i++) {
 			jdbcTemplate.update(KotlinSql.Companion.getInsert())
-					.bind("name","name " + i)
+					.bind("name","ชื่อ " + i)
 					.bind("snakeCase","snakeCase " + i)
 					.bind("camelCase","camelCase " + i)
+					.bind("thai","ไทย " + i)
+					.bind("inter","泰國人 ຄົນໄທ タイ人 ភាសាខ្មែរ " + i)
 					.bind("no", i)
 					.execute();
 		}
@@ -65,6 +69,8 @@ class Init {
 
 
 		//Print read records:
-		beers.forEach(System.out::println);
+		for (Beer beer : beers) {
+			log.info(beer.toString());
+		}
 	}
 }

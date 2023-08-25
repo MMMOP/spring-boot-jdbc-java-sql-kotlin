@@ -12,4 +12,6 @@ public class Beer {
     private Integer no;
     private String snakeCase;
     private String camelCase;
+    private String thai;
+    private String inter;
 }
