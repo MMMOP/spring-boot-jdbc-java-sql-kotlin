@@ -15,3 +15,4 @@ java -jar target/spring-boot-jdbc-java-sql-kotlin-1.0.0.war
 
 - https://github.com/kevin-peters/spring-boot-java-kotlin-jackson-demo
 - https://github.com/bwajtr/fluent-spring-jdbctemplate
+- https://www.baeldung.com/spring-data-jdbc-intro
