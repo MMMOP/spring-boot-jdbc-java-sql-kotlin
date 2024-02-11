@@ -10,7 +10,7 @@ import java.util.Set;
 @Repository
 public interface ItemRepository extends CrudRepository<Item, Integer> {
 
-  Set<Item> findByNoOrderByNameDesc(Integer no);
+  Set<Item> findByItemNoOrderByNameDesc(Integer itemNo);
 
   List<Item> findByNameContaining(String name);
 

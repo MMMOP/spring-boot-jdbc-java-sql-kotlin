@@ -13,6 +13,7 @@ import javax.sql.DataSource;
 
 @Configuration
 @EnableJdbcRepositories(basePackages = "com.example.demo.repository")
+//@ProjectColumnCaseFormat(CaseFormat.LOWER_UNDERSCORE)
 public class DatasourceConfig {
 
     @Bean
